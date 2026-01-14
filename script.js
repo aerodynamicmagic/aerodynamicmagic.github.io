@@ -335,15 +335,19 @@ let currentUnit = "km";
 
 // Search suggestions
 searchInput.addEventListener("input", () => {
-  const query = searchInput.value.trim().toLowerCase();
-  suggestionsDiv.innerHTML = "";
+  const q = searchInput.value.trim()
+  suggestionsDiv.innerHTML = ""
+  if(!q)return
+  const best = fuzzyFind(q, aircraftData)
+  if(best){
+    const item=document.createElement("div")
+    item.className="suggestion-item"
+    item.textContent=`${best.name} (${best.code})`
+    item.onclick=()=>{selectAircraft(best);searchInput.value=`${best.name} (${best.code})`;suggestionsDiv.innerHTML=""}
+    suggestionsDiv.appendChild(item)
+  }
+})
 
-  if (!query) return;
-
-  const matches = aircraftData.filter(a =>
-    a.name.toLowerCase().includes(query) ||
-    a.code.toLowerCase().includes(query)
-  );
 
   matches.forEach(a => {
     const item = document.createElement("div");
@@ -487,3 +491,22 @@ function smoothScrollTo(targetElement, durationMs) {
 
   requestAnimationFrame(step);
 }
+
+
+function fuzzyFind(q, list){
+  q=q.toLowerCase()
+  let best=null,score=1e9
+  for(const a of list){
+    const s=a.name.toLowerCase()+" "+a.code.toLowerCase()
+    let d=0,i=0,j=0
+    while(i<q.length&&j<s.length){
+      if(q[i]!==s[j])d++
+      else i++
+      j++
+    }
+    d+=q.length-i
+    if(d<score){score=d;best=a}
+  }
+  return best
+}
+
