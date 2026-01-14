@@ -440,7 +440,7 @@ calculateBtn.addEventListener("click", () => {
   const enduranceM = Math.round((enduranceHours - enduranceH) * 60);
 
   const statusClass = canReach ? "status-yes" : "status-no";
-  const statusText = canReach ? "YES, Within Range" : "NO, Out of Range";
+  const statusText = canReach ? "YES — Within Range" : "NO — Out of Range";
 
   resultsContent.innerHTML = `
     <div class="status-bar ${statusClass}">${statusText}</div>
