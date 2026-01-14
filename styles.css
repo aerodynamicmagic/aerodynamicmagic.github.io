@@ -1,0 +1,224 @@
+/* ============================
+   BASE
+============================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, sans-serif;
+  border-radius: 0; /* reset everything to flat */
+}
+
+body {
+  background: #f7f7f7; /* very light grey */
+  color: #000;
+}
+
+/* ============================
+   TOP BAR
+============================ */
+.top-bar {
+  background: #e0e0e0;
+  padding: 16px 24px;
+  border-bottom: 1px solid #c0c0c0;
+}
+
+/* ============================
+   LAYOUT
+============================ */
+.container {
+  max-width: 960px;
+  margin: 24px auto 40px;
+  padding: 0 16px;
+}
+
+/* ============================
+   CARDS
+============================ */
+.card {
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+}
+
+.card h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* ============================
+   INTERACTABLE HOVER FADE
+============================ */
+button,
+input[type="text"],
+input[type="number"],
+.suggestion-item,
+.unit-btn {
+  transition: filter 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53);
+}
+
+button:hover,
+input[type="text"]:hover,
+input[type="number"]:hover,
+.suggestion-item:hover,
+.unit-btn:hover {
+  filter: brightness(0.92);
+}
+
+/* ============================
+   INPUTS
+============================ */
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #b0b0b0;
+  background: #f7f7f7;
+  color: #000;
+}
+
+input:focus {
+  outline: none;
+  border-color: #808080;
+  background: #fff;
+}
+
+/* ============================
+   SUGGESTIONS
+============================ */
+.suggestions {
+  margin-top: 6px;
+}
+
+.suggestion-item {
+  padding: 6px 8px;
+  border: 1px solid #d0d0d0;
+  border-top: none;
+  background: #f9f9f9;
+  cursor: pointer;
+}
+
+/* ============================
+   UNIT BAR
+============================ */
+.unit-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.unit-btn {
+  flex: 1;
+  padding: 8px 6px;
+  border: 1px solid #b0b0b0;
+  background: #f0f0f0;
+  color: #000;
+  cursor: pointer;
+}
+
+.unit-btn.active {
+  background: #d0d0d0;
+  border-color: #808080;
+}
+
+/* ============================
+   DISTANCE INPUT ROW
+============================ */
+.distance-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#unitLabel {
+  min-width: 40px;
+  text-align: center;
+}
+
+/* ============================
+   BUTTONS
+============================ */
+.primary-btn {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+}
+
+/* ============================
+   ERROR TEXT
+============================ */
+.error-msg {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #b00000;
+}
+
+/* ============================
+   RESULTS BOX
+============================ */
+.results-large {
+  min-height: 260px;
+  border: 2px solid #000;
+}
+
+.results-content {
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+/* ============================
+   STATUS BAR (YES / NO)
+============================ */
+.status-bar {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.status-yes {
+  background: #2e9e41;
+}
+
+.status-no {
+  background: #c62828;
+}
+
+/* ============================
+   LARGE FLIGHT TIME TEXT
+============================ */
+.flight-time {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+/* ============================
+   ENDURANCE BOX (ONLY ROUNDED ELEMENT)
+============================ */
+.endurance-box {
+  background: #efefef;
+  border: 1px solid #c0c0c0;
+  padding: 14px;
+  border-radius: 5px; /* ONLY this box is rounded */
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* ============================
+   FOOTER
+============================ */
+.footer {
+  text-align: center;
+  font-size: 12px;
+  color: #404040;
+  padding: 12px 0 18px;
+}
