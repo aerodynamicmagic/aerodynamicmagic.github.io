@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Aviation Range & Time Calculator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+    <div class="img-container">
+  <img src="https://i.ibb.co/G4HhxdFC/alarm-clock-icon-icon-search-engine-7.png" alt="error">
+</div>
+
+<style>
+    .img-container{background: #c9c9c9;
+background: linear-gradient(0deg, rgba(201, 201, 201, 1) 0%, rgba(255, 255, 255, 1) 99%);}
+  .img-container img {
+    width: 400px;
+    max-width: 100%;
+    display: block;
+  }
+
+  @media (max-width: 450px) {
+    .img-container img {
+      width: 100%;
+    }
+  }
+</style>
+
+  <header class="top-bar">
+    <h1>Aviation Range & Time Calculator</h1>
+  </header>
+
+  <main class="container">
+
+    <!-- Aircraft Search -->
+    <section class="card">
+      <h2>Search Aircraft</h2>
+      <input
+        type="text"
+        id="aircraftSearch"
+        placeholder="Type aircraft name (A320, B737, C172...)"
+      />
+      <div id="aircraftSuggestions" class="suggestions"></div>
+      <div id="aircraftInfo" class="aircraft-info"></div>
+    </section>
+
+    <!-- Distance Input -->
+    <section class="card">
+      <h2>Distance Input</h2>
+
+      <div class="unit-bar">
+        <button class="unit-btn active" data-unit="km">Kilometers</button>
+        <button class="unit-btn" data-unit="nm">Nautical miles</button>
+        <button class="unit-btn" data-unit="mi">Miles</button>
+        <button class="unit-btn" data-unit="m">Meters</button>
+      </div>
+
+      <div class="distance-input-row">
+        <input type="number" id="distanceInput" placeholder="Enter distance" min="0" />
+        <span id="unitLabel">km</span>
+      </div>
+
+      <button id="calculateBtn" class="primary-btn">Calculate</button>
+      <div id="distanceError" class="error-msg"></div>
+    </section>
+
+    <!-- Results -->
+    <section id="resultsSection" class="card results-large">
+      <h2>Results</h2>
+      <div id="resultsContent" class="results-content">
+        <p>No calculation yet. Choose an aircraft and enter a distance.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Demonstration only! Not for real-world flight planning.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
