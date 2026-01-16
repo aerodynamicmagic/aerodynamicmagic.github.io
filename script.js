@@ -323,7 +323,6 @@ const aircraftData = [
 ];
 
 
-
 const searchInput = document.getElementById("aircraftSearch");
 const suggestionsDiv = document.getElementById("aircraftSuggestions");
 const aircraftInfoDiv = document.getElementById("aircraftInfo");
@@ -338,7 +337,7 @@ const resultsContent = document.getElementById("resultsContent");
 let selectedAircraft = null;
 let currentUnit = "km";
 
-// Search suggestions
+// Search suggestions (NO FUZZY)
 searchInput.addEventListener("input", () => {
   const query = searchInput.value.trim().toLowerCase();
   suggestionsDiv.innerHTML = "";
@@ -447,6 +446,7 @@ calculateBtn.addEventListener("click", () => {
   const statusClass = canReach ? "status-yes" : "status-no";
   const statusText = canReach ? "YES — Within Range" : "NO — Out of Range";
 
+  // Inject results + time calculator
   resultsContent.innerHTML = `
     <div class="status-bar ${statusClass}">${statusText}</div>
 
@@ -454,6 +454,31 @@ calculateBtn.addEventListener("click", () => {
 
     <div class="endurance-box">
       This aircraft can roughly fly for: ${enduranceH} h ${enduranceM} min
+    </div>
+
+    <div id="timeCalc" class="time-calc">
+      <div class="time-tabs">
+        <button id="tabStart" class="time-tab active">Start → Arrival</button>
+        <button id="tabEnd" class="time-tab">Arrival → Start</button>
+      </div>
+
+      <div class="time-row">
+        <label>Time:</label>
+        <input type="time" id="timeInput">
+      </div>
+
+      <div class="time-row">
+        <label><input type="checkbox" id="ampmToggle"> 12‑hour mode</label>
+      </div>
+
+      <div class="time-btn-row">
+        <button id="timeCalcBtn" class="oldskool-btn bluegrey-btn">Calculate</button>
+      </div>
+
+      <div id="timeOutput" class="time-output" style="display:none;">
+        Time of arrival/landing:
+        <p id="timeOutputValue"></p>
+      </div>
     </div>
 
     <p><strong>Aircraft:</strong> ${selectedAircraft.name} (${selectedAircraft.code})</p>
@@ -464,9 +489,13 @@ calculateBtn.addEventListener("click", () => {
     </p>
   `;
 
+  // Activate time calculator
+  hookTimeCalculator(hours, minutes);
+
   smoothScrollTo(resultsSection, 780);
 });
 
+// Time calculator logic
 function hookTimeCalculator(hours, minutes){
   const tabStart = document.getElementById("tabStart");
   const tabEnd = document.getElementById("tabEnd");
@@ -524,6 +553,28 @@ function hookTimeCalculator(hours, minutes){
   };
 }
 
-  outBox.style.display = "block";
-};
+// Smooth scroll
+function smoothScrollTo(targetElement, durationMs) {
+  const startY = window.scrollY || window.pageYOffset;
+  const rect = targetElement.getBoundingClientRect();
+  const targetY = rect.top + startY - 16;
+  const distance = targetY - startY;
+  const startTime = performance.now();
 
+  function easeInQuad(t) {
+    return t * t;
+  }
+
+  function step(currentTime) {
+    const elapsed = currentTime - startTime;
+    const t = Math.min(elapsed / durationMs, 1);
+    const eased = easeInQuad(t);
+    window.scrollTo(0, startY + distance * eased);
+
+    if (elapsed < durationMs) {
+      requestAnimationFrame(step);
+    }
+  }
+
+  requestAnimationFrame(step);
+}
