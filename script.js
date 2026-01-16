@@ -549,3 +549,28 @@ function smoothScrollTo(targetElement, durationMs) {
 
   requestAnimationFrame(step);
 }
+
+const calcBtn = document.getElementById("timeCalcBtn");
+const outBox = document.getElementById("timeOutput");
+const outVal = document.getElementById("timeOutputValue");
+
+calcBtn.onclick = () => {
+  if (!timeInput.value) return;
+
+  const [h, m] = timeInput.value.split(":").map(Number);
+  let total = h * 60 + m;
+
+  const flightMinutes = lastHours * 60 + lastMinutes;
+
+  if (mode === "start") total += flightMinutes;
+  else total -= flightMinutes;
+
+  total = (total + 1440) % 1440;
+
+  const outH = Math.floor(total / 60);
+  const outM = total % 60;
+
+  outVal.textContent = formatTime(outH, outM, ampmToggle.checked);
+  outBox.style.display = "block";
+};
+
