@@ -1,17 +1,14 @@
 // Large demo aircraft database (approximate values, not for real-world use)
 const aircraftData = [
+  // Existing examples
   { name: "Airbus A320", code: "A320", cruiseSpeedKts: 450, rangeNm: 3300 },
-  // Removed duplicate "Boeing 737-800" that was at line 5
+  { name: "Boeing 737-800", code: "B737-800", cruiseSpeedKts: 455, rangeNm: 2935 },
   { name: "Cessna 172 Skyhawk", code: "C172", cruiseSpeedKts: 120, rangeNm: 640 },
   { name: "Boeing 787-9", code: "B787-9", cruiseSpeedKts: 488, rangeNm: 7600 },
 
   // Airbus A350
   { name: "Airbus A350-900", code: "A350-900", cruiseSpeedKts: 488, rangeNm: 8100 },
   { name: "Airbus A350-1000", code: "A350-1000", cruiseSpeedKts: 488, rangeNm: 8400 },
-
-  // Boeing 727 (added)
-  { name: "Boeing 727-100", code: "B727-100", cruiseSpeedKts: 460, rangeNm: 2500 },
-  { name: "Boeing 727-200", code: "B727-200", cruiseSpeedKts: 460, rangeNm: 2600 },
 
   // Boeing 737 Classic / NG / MAX
   { name: "Boeing 737-100", code: "B737-100", cruiseSpeedKts: 430, rangeNm: 1500 },
@@ -322,8 +319,6 @@ const aircraftData = [
   { name: "Embraer KC-390 Millennium", code: "KC-390", cruiseSpeedKts: 450, rangeNm: 2400 }
 ];
 
-];
-
 const searchInput = document.getElementById("aircraftSearch");
 const suggestionsDiv = document.getElementById("aircraftSuggestions");
 const aircraftInfoDiv = document.getElementById("aircraftInfo");
@@ -338,16 +333,7 @@ const resultsContent = document.getElementById("resultsContent");
 let selectedAircraft = null;
 let currentUnit = "km";
 
-// Initialize with km selected
-if (unitButtons.length > 0) {
-  unitButtons.forEach(btn => {
-    if (btn.dataset.unit === "km") {
-      btn.classList.add("active");
-    }
-  });
-}
-
-// Search suggestions (NO FUZZY)
+// Search suggestions
 searchInput.addEventListener("input", () => {
   const query = searchInput.value.trim().toLowerCase();
   suggestionsDiv.innerHTML = "";
@@ -357,7 +343,7 @@ searchInput.addEventListener("input", () => {
   const matches = aircraftData.filter(a =>
     a.name.toLowerCase().includes(query) ||
     a.code.toLowerCase().includes(query)
-  ).slice(0, 10); // Limit to 10 suggestions for performance
+  );
 
   matches.forEach(a => {
     const item = document.createElement("div");
@@ -370,17 +356,6 @@ searchInput.addEventListener("input", () => {
     });
     suggestionsDiv.appendChild(item);
   });
-  
-  // Show suggestions div
-  suggestionsDiv.style.display = matches.length > 0 ? "block" : "none";
-});
-
-// Close suggestions when clicking outside
-document.addEventListener("click", (e) => {
-  if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
-    suggestionsDiv.innerHTML = "";
-    suggestionsDiv.style.display = "none";
-  }
 });
 
 function selectAircraft(aircraft) {
@@ -394,8 +369,6 @@ function selectAircraft(aircraft) {
     <p><strong>Cruise speed:</strong> ~${aircraft.cruiseSpeedKts} kt (~${cruiseKmH.toFixed(0)} km/h)</p>
     <p><strong>Max range:</strong> ~${aircraft.rangeNm} NM (~${rangeKm.toFixed(0)} km)</p>
   `;
-  
-  aircraftInfoDiv.style.display = "block";
 }
 
 // Unit selection
@@ -411,7 +384,7 @@ unitButtons.forEach(btn => {
 // Convert to nautical miles
 function toNauticalMiles(value, unit) {
   const v = Number(value);
-  if (isNaN(v) || v <= 0) return 0;
+  if (Number.isNaN(v)) return 0;
 
   switch (unit) {
     case "km": return v / 1.852;
@@ -424,18 +397,15 @@ function toNauticalMiles(value, unit) {
 // Calculate
 calculateBtn.addEventListener("click", () => {
   distanceError.textContent = "";
-  distanceError.style.display = "none";
 
   if (!selectedAircraft) {
     distanceError.textContent = "Select an aircraft first.";
-    distanceError.style.display = "block";
     return;
   }
 
   const distanceVal = distanceInput.value.trim();
-  if (!distanceVal || isNaN(distanceVal) || Number(distanceVal) <= 0) {
+  if (!distanceVal || Number(distanceVal) <= 0) {
     distanceError.textContent = "Enter a valid distance greater than zero.";
-    distanceError.style.display = "block";
     return;
   }
 
@@ -444,8 +414,8 @@ calculateBtn.addEventListener("click", () => {
 
   // Flight time model
   const cruiseKts = selectedAircraft.cruiseSpeedKts;
-  const climbTimeHr = 0.25; // 15 minutes
-  const descentTimeHr = 0.25; // 15 minutes
+  const climbTimeHr = 0.25;
+  const descentTimeHr = 0.25;
   const climbDistanceNm = cruiseKts * 0.7 * climbTimeHr;
   const descentDistanceNm = cruiseKts * 0.6 * descentTimeHr;
   const minProfileDistanceNm = climbDistanceNm + descentDistanceNm;
@@ -472,7 +442,6 @@ calculateBtn.addEventListener("click", () => {
   const statusClass = canReach ? "status-yes" : "status-no";
   const statusText = canReach ? "YES — Within Range" : "NO — Out of Range";
 
-  // Inject results + time calculator
   resultsContent.innerHTML = `
     <div class="status-bar ${statusClass}">${statusText}</div>
 
@@ -480,31 +449,6 @@ calculateBtn.addEventListener("click", () => {
 
     <div class="endurance-box">
       This aircraft can roughly fly for: ${enduranceH} h ${enduranceM} min
-    </div>
-
-    <div id="timeCalc" class="time-calc">
-      <div class="time-tabs">
-        <button id="tabStart" class="time-tab active">Start → Arrival</button>
-        <button id="tabEnd" class="time-tab">Arrival → Start</button>
-      </div>
-
-      <div class="time-row">
-        <label>Time:</label>
-        <input type="time" id="timeInput">
-      </div>
-
-      <div class="time-row">
-        <label><input type="checkbox" id="ampmToggle"> 12‑hour mode</label>
-      </div>
-
-      <div class="time-btn-row">
-        <button id="timeCalcBtn" class="oldskool-btn bluegrey-btn">Calculate</button>
-      </div>
-
-      <div id="timeOutput" class="time-output" style="display:none;">
-        Time of arrival/landing:
-        <p id="timeOutputValue"></p>
-      </div>
     </div>
 
     <p><strong>Aircraft:</strong> ${selectedAircraft.name} (${selectedAircraft.code})</p>
@@ -515,102 +459,31 @@ calculateBtn.addEventListener("click", () => {
     </p>
   `;
 
-  // Activate time calculator
-  hookTimeCalculator(hours, minutes);
-
-  // Show results section
-  resultsSection.style.display = "block";
-  
-  // Smooth scroll to results
-  smoothScrollTo(resultsSection);
+  smoothScrollTo(resultsSection, 780);
 });
 
-// Time calculator logic
-function hookTimeCalculator(hours, minutes){
-  const tabStart = document.getElementById("tabStart");
-  const tabEnd = document.getElementById("tabEnd");
-  const timeInput = document.getElementById("timeInput");
-  const ampmToggle = document.getElementById("ampmToggle");
-  const calcBtn = document.getElementById("timeCalcBtn");
-  const outBox = document.getElementById("timeOutput");
-  const outVal = document.getElementById("timeOutputValue");
+// Quadratic ease-in scroll
+function smoothScrollTo(targetElement, durationMs) {
+  const startY = window.scrollY || window.pageYOffset;
+  const rect = targetElement.getBoundingClientRect();
+  const targetY = rect.top + startY - 16;
+  const distance = targetY - startY;
+  const startTime = performance.now();
 
-  let mode = "start";
-
-  tabStart.onclick = () => {
-    mode = "start";
-    tabStart.classList.add("active");
-    tabEnd.classList.remove("active");
-    outBox.style.display = "none";
-  };
-
-  tabEnd.onclick = () => {
-    mode = "end";
-    tabEnd.classList.add("active");
-    tabStart.classList.remove("active");
-    outBox.style.display = "none";
-  };
-
-  function formatTime(h, m, ampm) {
-    if (!ampm) return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
-    let suffix = h >= 12 ? "PM" : "AM";
-    let hh = h % 12;
-    if (hh === 0) hh = 12;
-    return `${hh}:${String(m).padStart(2,"0")} ${suffix}`;
+  function easeInQuad(t) {
+    return t * t;
   }
 
-  calcBtn.onclick = () => {
-    if (!timeInput.value) {
-      alert("Please enter a time");
-      return;
-    }
+  function step(currentTime) {
+    const elapsed = currentTime - startTime;
+    const t = Math.min(elapsed / durationMs, 1);
+    const eased = easeInQuad(t);
+    window.scrollTo(0, startY + distance * eased);
 
-    const [h, m] = timeInput.value.split(":").map(Number);
-    let total = h * 60 + m;
-    const flightMinutes = hours * 60 + minutes;
-
-    if (mode === "start") total += flightMinutes;
-    else total -= flightMinutes;
-
-    total = (total + 1440) % 1440;
-
-    const outH = Math.floor(total / 60);
-    const outM = total % 60;
-
-    outVal.textContent = formatTime(outH, outM, ampmToggle.checked);
-    outBox.style.display = "block";
-  };
-
-  ampmToggle.onchange = () => {
-    if (timeInput.value) calcBtn.onclick();
-  };
-}
-
-// Smooth scroll
-function smoothScrollTo(targetElement) {
-  const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-  const startPosition = window.pageYOffset;
-  const distance = targetPosition - startPosition - 100; // Offset by 100px
-  const duration = 800; // 800ms scroll duration
-  let startTime = null;
-
-  function animation(currentTime) {
-    if (startTime === null) startTime = currentTime;
-    const timeElapsed = currentTime - startTime;
-    const run = easeInOutQuad(Math.min(timeElapsed / duration, 1));
-    window.scrollTo(0, startPosition + distance * run);
-    
-    if (timeElapsed < duration) {
-      requestAnimationFrame(animation);
+    if (elapsed < durationMs) {
+      requestAnimationFrame(step);
     }
   }
 
-  function easeInOutQuad(t) {
-    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-  }
-
-  requestAnimationFrame(animation);
+  requestAnimationFrame(step);
 }
-
-
-
