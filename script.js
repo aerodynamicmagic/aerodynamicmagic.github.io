@@ -1,6 +1,5 @@
 // Large demo aircraft database (approximate values, not for real-world use)
 const aircraftData = [
-  // Existing examples
   { name: "Airbus A320", code: "A320", cruiseSpeedKts: 450, rangeNm: 3300 },
   { name: "Boeing 737-800", code: "B737-800", cruiseSpeedKts: 455, rangeNm: 2935 },
   { name: "Cessna 172 Skyhawk", code: "C172", cruiseSpeedKts: 120, rangeNm: 640 },
@@ -9,6 +8,10 @@ const aircraftData = [
   // Airbus A350
   { name: "Airbus A350-900", code: "A350-900", cruiseSpeedKts: 488, rangeNm: 8100 },
   { name: "Airbus A350-1000", code: "A350-1000", cruiseSpeedKts: 488, rangeNm: 8400 },
+
+  // Boeing 727 (added)
+  { name: "Boeing 727-100", code: "B727-100", cruiseSpeedKts: 460, rangeNm: 2500 },
+  { name: "Boeing 727-200", code: "B727-200", cruiseSpeedKts: 460, rangeNm: 2600 },
 
   // Boeing 737 Classic / NG / MAX
   { name: "Boeing 737-100", code: "B737-100", cruiseSpeedKts: 430, rangeNm: 1500 },
@@ -319,6 +322,8 @@ const aircraftData = [
   { name: "Embraer KC-390 Millennium", code: "KC-390", cruiseSpeedKts: 450, rangeNm: 2400 }
 ];
 
+
+
 const searchInput = document.getElementById("aircraftSearch");
 const suggestionsDiv = document.getElementById("aircraftSuggestions");
 const aircraftInfoDiv = document.getElementById("aircraftInfo");
@@ -461,6 +466,63 @@ calculateBtn.addEventListener("click", () => {
 
   smoothScrollTo(resultsSection, 780);
 });
+
+
+document.getElementById("timeCalc").style.display = "block";
+
+const tabStart = document.getElementById("tabStart");
+const tabEnd = document.getElementById("tabEnd");
+const timeInput = document.getElementById("timeInput");
+const timeResult = document.getElementById("timeResult");
+const ampmToggle = document.getElementById("ampmToggle");
+
+let mode = "start";
+
+tabStart.onclick = () => {
+  mode = "start";
+  tabStart.classList.add("active");
+  tabEnd.classList.remove("active");
+  timeResult.textContent = "—";
+};
+
+tabEnd.onclick = () => {
+  mode = "end";
+  tabEnd.classList.add("active");
+  tabStart.classList.remove("active");
+  timeResult.textContent = "—";
+};
+
+function formatTime(h, m, ampm) {
+  if (!ampm) return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+  let suffix = h >= 12 ? "PM" : "AM";
+  let hh = h % 12;
+  if (hh === 0) hh = 12;
+  return `${hh}:${String(m).padStart(2,"0")} ${suffix}`;
+}
+
+timeInput.oninput = () => {
+  if (!timeInput.value) return;
+
+  const [h, m] = timeInput.value.split(":").map(Number);
+  let total = h * 60 + m;
+
+  const flightMinutes = hours * 60 + minutes;
+
+  if (mode === "start") total += flightMinutes;
+  else total -= flightMinutes;
+
+  total = (total + 1440) % 1440;
+
+  const outH = Math.floor(total / 60);
+  const outM = total % 60;
+
+  timeResult.textContent = formatTime(outH, outM, ampmToggle.checked);
+};
+
+ampmToggle.onchange = () => {
+  timeInput.oninput();
+};
+
 
 // Quadratic ease-in scroll
 function smoothScrollTo(targetElement, durationMs) {
