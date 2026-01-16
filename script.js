@@ -612,50 +612,5 @@ function smoothScrollTo(targetElement) {
   requestAnimationFrame(animation);
 }
 
-// Add CSS for suggestions if not already in your CSS
-const style = document.createElement('style');
-style.textContent = `
-  #aircraftSuggestions {
-    position: absolute;
-    background: white;
-    border: 1px solid #ccc;
-    max-height: 200px;
-    overflow-y: auto;
-    width: 100%;
-    z-index: 1000;
-    display: none;
-  }
-  
-  .suggestion-item {
-    padding: 8px;
-    cursor: pointer;
-  }
-  
-  .suggestion-item:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .status-yes {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 10px 0;
-  }
-  
-  .status-no {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 10px 0;
-  }
-  
-  #distanceError {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
-    display: none;
-  }
-`;
-document.head.appendChild(style);
+
+
