@@ -226,3 +226,41 @@ input:focus {
   color: #404040;
   padding: 12px 0 18px;
 }
+
+.time-calc {
+  margin-top: 12px;
+  padding: 10px;
+  background: #efefef;
+  border: 1px solid #c0c0c0;
+}
+
+.time-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.time-tab {
+  flex: 1;
+  padding: 6px;
+  background: #ddd;
+  border: 1px solid #aaa;
+  cursor: pointer;
+}
+
+.time-tab.active {
+  background: #bbb;
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+#timeInput {
+  padding: 4px;
+  border: 1px solid #aaa;
+}
+
