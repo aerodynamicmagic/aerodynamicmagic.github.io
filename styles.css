@@ -263,4 +263,43 @@ input:focus {
   padding: 4px;
   border: 1px solid #aaa;
 }
+.time-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.oldskool-btn {
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+  transition: background 0.25s ease;
+}
+
+.bluegrey-btn {
+  background: linear-gradient(to bottom, #7f8fa6, #5c6b80);
+}
+
+.bluegrey-btn:hover {
+  background: linear-gradient(to bottom, #9aa9c0, #6f7f95);
+}
+
+.time-output {
+  margin-top: 12px;
+  padding: 10px;
+  background: linear-gradient(90deg, rgba(142,176,209,1) 0%, rgba(217,217,217,1) 100%);
+  font-family: arial;
+  font-size: 19px;
+}
+
+.time-output p {
+  font-size: 30px;
+  transform: translateY(-25px);
+  margin: 0;
+}
 
