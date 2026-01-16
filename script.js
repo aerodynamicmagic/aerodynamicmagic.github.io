@@ -467,110 +467,63 @@ calculateBtn.addEventListener("click", () => {
   smoothScrollTo(resultsSection, 780);
 });
 
+function hookTimeCalculator(hours, minutes){
+  const tabStart = document.getElementById("tabStart");
+  const tabEnd = document.getElementById("tabEnd");
+  const timeInput = document.getElementById("timeInput");
+  const ampmToggle = document.getElementById("ampmToggle");
+  const calcBtn = document.getElementById("timeCalcBtn");
+  const outBox = document.getElementById("timeOutput");
+  const outVal = document.getElementById("timeOutputValue");
 
-document.getElementById("timeCalc").style.display = "block";
+  let mode = "start";
 
-const tabStart = document.getElementById("tabStart");
-const tabEnd = document.getElementById("tabEnd");
-const timeInput = document.getElementById("timeInput");
-const timeResult = document.getElementById("timeResult");
-const ampmToggle = document.getElementById("ampmToggle");
+  tabStart.onclick = () => {
+    mode = "start";
+    tabStart.classList.add("active");
+    tabEnd.classList.remove("active");
+    outBox.style.display = "none";
+  };
 
-let mode = "start";
+  tabEnd.onclick = () => {
+    mode = "end";
+    tabEnd.classList.add("active");
+    tabStart.classList.remove("active");
+    outBox.style.display = "none";
+  };
 
-tabStart.onclick = () => {
-  mode = "start";
-  tabStart.classList.add("active");
-  tabEnd.classList.remove("active");
-  timeResult.textContent = "—";
-};
-
-tabEnd.onclick = () => {
-  mode = "end";
-  tabEnd.classList.add("active");
-  tabStart.classList.remove("active");
-  timeResult.textContent = "—";
-};
-
-function formatTime(h, m, ampm) {
-  if (!ampm) return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
-  let suffix = h >= 12 ? "PM" : "AM";
-  let hh = h % 12;
-  if (hh === 0) hh = 12;
-  return `${hh}:${String(m).padStart(2,"0")} ${suffix}`;
-}
-
-timeInput.oninput = () => {
-  if (!timeInput.value) return;
-
-  const [h, m] = timeInput.value.split(":").map(Number);
-  let total = h * 60 + m;
-
-  const flightMinutes = hours * 60 + minutes;
-
-  if (mode === "start") total += flightMinutes;
-  else total -= flightMinutes;
-
-  total = (total + 1440) % 1440;
-
-  const outH = Math.floor(total / 60);
-  const outM = total % 60;
-
-  timeResult.textContent = formatTime(outH, outM, ampmToggle.checked);
-};
-
-ampmToggle.onchange = () => {
-  timeInput.oninput();
-};
-
-
-// Quadratic ease-in scroll
-function smoothScrollTo(targetElement, durationMs) {
-  const startY = window.scrollY || window.pageYOffset;
-  const rect = targetElement.getBoundingClientRect();
-  const targetY = rect.top + startY - 16;
-  const distance = targetY - startY;
-  const startTime = performance.now();
-
-  function easeInQuad(t) {
-    return t * t;
+  function formatTime(h, m, ampm) {
+    if (!ampm) return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+    let suffix = h >= 12 ? "PM" : "AM";
+    let hh = h % 12;
+    if (hh === 0) hh = 12;
+    return `${hh}:${String(m).padStart(2,"0")} ${suffix}`;
   }
 
-  function step(currentTime) {
-    const elapsed = currentTime - startTime;
-    const t = Math.min(elapsed / durationMs, 1);
-    const eased = easeInQuad(t);
-    window.scrollTo(0, startY + distance * eased);
+  calcBtn.onclick = () => {
+    if (!timeInput.value) return;
 
-    if (elapsed < durationMs) {
-      requestAnimationFrame(step);
-    }
-  }
+    const [h, m] = timeInput.value.split(":").map(Number);
+    let total = h * 60 + m;
+    const flightMinutes = hours * 60 + minutes;
 
-  requestAnimationFrame(step);
+    if (mode === "start") total += flightMinutes;
+    else total -= flightMinutes;
+
+    total = (total + 1440) % 1440;
+
+    const outH = Math.floor(total / 60);
+    const outM = total % 60;
+
+    outVal.textContent = formatTime(outH, outM, ampmToggle.checked);
+    outBox.style.display = "block";
+  };
+
+  ampmToggle.onchange = () => {
+    if (timeInput.value) calcBtn.onclick();
+  };
 }
 
-const calcBtn = document.getElementById("timeCalcBtn");
-const outBox = document.getElementById("timeOutput");
-const outVal = document.getElementById("timeOutputValue");
-
-calcBtn.onclick = () => {
-  if (!timeInput.value) return;
-
-  const [h, m] = timeInput.value.split(":").map(Number);
-  let total = h * 60 + m;
-
-  const flightMinutes = lastHours * 60 + lastMinutes;
-
-  if (mode === "start") total += flightMinutes;
-  else total -= flightMinutes;
-
-  total = (total + 1440) % 1440;
-
-  const outH = Math.floor(total / 60);
-  const outM = total % 60;
-
-  outVal.textContent = formatTime(outH, outM, ampmToggle.checked);
   outBox.style.display = "block";
 };
 
