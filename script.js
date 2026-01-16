@@ -1,7 +1,7 @@
 // Large demo aircraft database (approximate values, not for real-world use)
 const aircraftData = [
   { name: "Airbus A320", code: "A320", cruiseSpeedKts: 450, rangeNm: 3300 },
-  { name: "Boeing 737-800", code: "B737-800", cruiseSpeedKts: 455, rangeNm: 2935 },
+  // Removed duplicate "Boeing 737-800" that was at line 5
   { name: "Cessna 172 Skyhawk", code: "C172", cruiseSpeedKts: 120, rangeNm: 640 },
   { name: "Boeing 787-9", code: "B787-9", cruiseSpeedKts: 488, rangeNm: 7600 },
 
@@ -322,6 +322,7 @@ const aircraftData = [
   { name: "Embraer KC-390 Millennium", code: "KC-390", cruiseSpeedKts: 450, rangeNm: 2400 }
 ];
 
+];
 
 const searchInput = document.getElementById("aircraftSearch");
 const suggestionsDiv = document.getElementById("aircraftSuggestions");
@@ -337,6 +338,15 @@ const resultsContent = document.getElementById("resultsContent");
 let selectedAircraft = null;
 let currentUnit = "km";
 
+// Initialize with km selected
+if (unitButtons.length > 0) {
+  unitButtons.forEach(btn => {
+    if (btn.dataset.unit === "km") {
+      btn.classList.add("active");
+    }
+  });
+}
+
 // Search suggestions (NO FUZZY)
 searchInput.addEventListener("input", () => {
   const query = searchInput.value.trim().toLowerCase();
@@ -347,7 +357,7 @@ searchInput.addEventListener("input", () => {
   const matches = aircraftData.filter(a =>
     a.name.toLowerCase().includes(query) ||
     a.code.toLowerCase().includes(query)
-  );
+  ).slice(0, 10); // Limit to 10 suggestions for performance
 
   matches.forEach(a => {
     const item = document.createElement("div");
@@ -360,6 +370,17 @@ searchInput.addEventListener("input", () => {
     });
     suggestionsDiv.appendChild(item);
   });
+  
+  // Show suggestions div
+  suggestionsDiv.style.display = matches.length > 0 ? "block" : "none";
+});
+
+// Close suggestions when clicking outside
+document.addEventListener("click", (e) => {
+  if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+    suggestionsDiv.innerHTML = "";
+    suggestionsDiv.style.display = "none";
+  }
 });
 
 function selectAircraft(aircraft) {
@@ -373,6 +394,8 @@ function selectAircraft(aircraft) {
     <p><strong>Cruise speed:</strong> ~${aircraft.cruiseSpeedKts} kt (~${cruiseKmH.toFixed(0)} km/h)</p>
     <p><strong>Max range:</strong> ~${aircraft.rangeNm} NM (~${rangeKm.toFixed(0)} km)</p>
   `;
+  
+  aircraftInfoDiv.style.display = "block";
 }
 
 // Unit selection
@@ -388,7 +411,7 @@ unitButtons.forEach(btn => {
 // Convert to nautical miles
 function toNauticalMiles(value, unit) {
   const v = Number(value);
-  if (Number.isNaN(v)) return 0;
+  if (isNaN(v) || v <= 0) return 0;
 
   switch (unit) {
     case "km": return v / 1.852;
@@ -401,15 +424,18 @@ function toNauticalMiles(value, unit) {
 // Calculate
 calculateBtn.addEventListener("click", () => {
   distanceError.textContent = "";
+  distanceError.style.display = "none";
 
   if (!selectedAircraft) {
     distanceError.textContent = "Select an aircraft first.";
+    distanceError.style.display = "block";
     return;
   }
 
   const distanceVal = distanceInput.value.trim();
-  if (!distanceVal || Number(distanceVal) <= 0) {
+  if (!distanceVal || isNaN(distanceVal) || Number(distanceVal) <= 0) {
     distanceError.textContent = "Enter a valid distance greater than zero.";
+    distanceError.style.display = "block";
     return;
   }
 
@@ -418,8 +444,8 @@ calculateBtn.addEventListener("click", () => {
 
   // Flight time model
   const cruiseKts = selectedAircraft.cruiseSpeedKts;
-  const climbTimeHr = 0.25;
-  const descentTimeHr = 0.25;
+  const climbTimeHr = 0.25; // 15 minutes
+  const descentTimeHr = 0.25; // 15 minutes
   const climbDistanceNm = cruiseKts * 0.7 * climbTimeHr;
   const descentDistanceNm = cruiseKts * 0.6 * descentTimeHr;
   const minProfileDistanceNm = climbDistanceNm + descentDistanceNm;
@@ -492,7 +518,11 @@ calculateBtn.addEventListener("click", () => {
   // Activate time calculator
   hookTimeCalculator(hours, minutes);
 
-  smoothScrollTo(resultsSection, 780);
+  // Show results section
+  resultsSection.style.display = "block";
+  
+  // Smooth scroll to results
+  smoothScrollTo(resultsSection);
 });
 
 // Time calculator logic
@@ -530,7 +560,10 @@ function hookTimeCalculator(hours, minutes){
   }
 
   calcBtn.onclick = () => {
-    if (!timeInput.value) return;
+    if (!timeInput.value) {
+      alert("Please enter a time");
+      return;
+    }
 
     const [h, m] = timeInput.value.split(":").map(Number);
     let total = h * 60 + m;
@@ -554,27 +587,75 @@ function hookTimeCalculator(hours, minutes){
 }
 
 // Smooth scroll
-function smoothScrollTo(targetElement, durationMs) {
-  const startY = window.scrollY || window.pageYOffset;
-  const rect = targetElement.getBoundingClientRect();
-  const targetY = rect.top + startY - 16;
-  const distance = targetY - startY;
-  const startTime = performance.now();
+function smoothScrollTo(targetElement) {
+  const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+  const startPosition = window.pageYOffset;
+  const distance = targetPosition - startPosition - 100; // Offset by 100px
+  const duration = 800; // 800ms scroll duration
+  let startTime = null;
 
-  function easeInQuad(t) {
-    return t * t;
-  }
-
-  function step(currentTime) {
-    const elapsed = currentTime - startTime;
-    const t = Math.min(elapsed / durationMs, 1);
-    const eased = easeInQuad(t);
-    window.scrollTo(0, startY + distance * eased);
-
-    if (elapsed < durationMs) {
-      requestAnimationFrame(step);
+  function animation(currentTime) {
+    if (startTime === null) startTime = currentTime;
+    const timeElapsed = currentTime - startTime;
+    const run = easeInOutQuad(Math.min(timeElapsed / duration, 1));
+    window.scrollTo(0, startPosition + distance * run);
+    
+    if (timeElapsed < duration) {
+      requestAnimationFrame(animation);
     }
   }
 
-  requestAnimationFrame(step);
+  function easeInOutQuad(t) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
+
+  requestAnimationFrame(animation);
 }
+
+// Add CSS for suggestions if not already in your CSS
+const style = document.createElement('style');
+style.textContent = `
+  #aircraftSuggestions {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+    z-index: 1000;
+    display: none;
+  }
+  
+  .suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .suggestion-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .status-yes {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+  
+  .status-no {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+  
+  #distanceError {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+  }
+`;
+document.head.appendChild(style);
