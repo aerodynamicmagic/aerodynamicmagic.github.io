@@ -75,7 +75,7 @@ background: linear-gradient(0deg, rgba(201, 201, 201, 1) 0%, rgba(255, 255, 255,
       </div>
     </section>
 
-<div id="timeCalc" class="time-calc" style="display:none;">
+<div id="timeCalc" class="time-calc" style="display:block;">
   <div class="time-tabs">
     <button id="tabStart" class="time-tab active">Start → Arrival</button>
     <button id="tabEnd" class="time-tab">Arrival → Start</button>
@@ -87,14 +87,19 @@ background: linear-gradient(0deg, rgba(201, 201, 201, 1) 0%, rgba(255, 255, 255,
   </div>
 
   <div class="time-row">
-    <label>Result:</label>
-    <span id="timeResult">#</span>
-  </div>
-
-  <div class="time-row">
     <label><input type="checkbox" id="ampmToggle"> 12‑hour mode</label>
   </div>
+
+  <div class="time-btn-row">
+    <button id="timeCalcBtn" class="oldskool-btn bluegrey-btn">Calculate</button>
+  </div>
+
+  <div id="timeOutput" class="time-output" style="display:none;">
+    Time of arrival/landing:
+    <p id="timeOutputValue"></p>
+  </div>
 </div>
+
 
   </main>
 
