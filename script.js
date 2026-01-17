@@ -10,6 +10,13 @@ const aircraftData = [
   { name: "Airbus A350-900", code: "A350-900", cruiseSpeedKts: 488, rangeNm: 9,700 },
   { name: "Airbus A350-1000", code: "A350-1000", cruiseSpeedKts: 488, rangeNm: 9,100 },
 
+//CONCORDE!!!
+
+  { name: "BAC Concorde", code: "SSC", cruiseSpeedKts: 1177, rangeNm: 4000 },
+
+  //sr-71
+    { name: "Lockheed SR-71 (Blackbird)", code: "SR-71", cruiseSpeedKts: 1905, rangeNm: 2900 },
+  
   // Boeing 737 Classic / NG / MAX
   { name: "Boeing 737-100", code: "B737-100", cruiseSpeedKts: 430, rangeNm: 1500 },
   { name: "Boeing 737-200", code: "B737-200", cruiseSpeedKts: 430, rangeNm: 2000 },
