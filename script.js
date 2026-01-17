@@ -7,8 +7,8 @@ const aircraftData = [
   { name: "Boeing 787-9", code: "B787-9", cruiseSpeedKts: 488, rangeNm: 7600 },
 
   // Airbus A350
-  { name: "Airbus A350-900", code: "A350-900", cruiseSpeedKts: 488, rangeNm: 8100 },
-  { name: "Airbus A350-1000", code: "A350-1000", cruiseSpeedKts: 488, rangeNm: 8400 },
+  { name: "Airbus A350-900", code: "A350-900", cruiseSpeedKts: 488, rangeNm: 9,700 },
+  { name: "Airbus A350-1000", code: "A350-1000", cruiseSpeedKts: 488, rangeNm: 9,100 },
 
   // Boeing 737 Classic / NG / MAX
   { name: "Boeing 737-100", code: "B737-100", cruiseSpeedKts: 430, rangeNm: 1500 },
@@ -316,7 +316,12 @@ const aircraftData = [
   { name: "Kawasaki C-2", code: "C-2", cruiseSpeedKts: 450, rangeNm: 4800 },
   { name: "Kawasaki P-1", code: "P-1", cruiseSpeedKts: 450, rangeNm: 4500 },
 
-  { name: "Embraer KC-390 Millennium", code: "KC-390", cruiseSpeedKts: 450, rangeNm: 2400 }
+  { name: "Embraer KC-390 Millennium", code: "KC-390", cruiseSpeedKts: 450, rangeNm: 2400 },
+  { name: "Hildern D7-300M Air Otter", code: "D7-3", cruiseSpeedKts: 600, rangeNm: 6000 },
+  { name: "Hildern D7-200M Air Otter", code: "D7-2", cruiseSpeedKts: 610, rangeNm: 8400 },
+  { name: "Hildern D7-100M Air Otter", code: "D7-1", cruiseSpeedKts: 522, rangeNm: 5000 },
+  { name: "Air Otter Neo", code: "VDL715", cruiseSpeedKts: 593, rangeNm: 8500 }
+
 ];
 
 const searchInput = document.getElementById("aircraftSearch");
