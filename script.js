@@ -7,8 +7,8 @@ const aircraftData = [
   { name: "Boeing 787-9", code: "B787-9", cruiseSpeedKts: 488, rangeNm: 7600 },
 
   // Airbus A350
-  { name: "Airbus A350-900", code: "A350-900", cruiseSpeedKts: 488, rangeNm: 9,700 },
-  { name: "Airbus A350-1000", code: "A350-1000", cruiseSpeedKts: 488, rangeNm: 9,100 },
+  { name: "Airbus A350-900", code: "A350-900", cruiseSpeedKts: 488, rangeNm: 9700 },
+  { name: "Airbus A350-1000", code: "A350-1000", cruiseSpeedKts: 488, rangeNm: 9100 },
 
 //CONCORDE!!!
 
