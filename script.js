@@ -292,7 +292,7 @@ const aircraftData = [
   { name: "Antonov An-124 Ruslan", code: "An-124", cruiseSpeedKts: 450, rangeNm: 2700 },
   { name: "Antonov An-148", code: "An-148", cruiseSpeedKts: 430, rangeNm: 2100 },
   { name: "Antonov An-158", code: "An-158", cruiseSpeedKts: 430, rangeNm: 2100 },
-  {name: "JW7 Blaster Neo-5", code"JW71", cruiseSpeedKts: 999, rangeNm: 8100},
+  {name: "JW7 Blaster Neo-5", code: "JW71", cruiseSpeedKts: 999, rangeNm: 8100},
   // Yakovlev
   { name: "Yakovlev Yak-40", code: "Yak-40", cruiseSpeedKts: 350, rangeNm: 700 },
   { name: "Yakovlev Yak-42D", code: "Yak-42D", cruiseSpeedKts: 430, rangeNm: 1300 },
